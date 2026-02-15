@@ -1,0 +1,31 @@
+[project]
+name = "founder-context-engine"
+version = "1.0.0"
+description = "Brand intelligence engine that ingests business knowledge and generates high-authority, brand-safe marketing content"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.13.3",
+    "asyncpg>=0.31.0",
+    "fastapi>=0.128.0",
+    "firecrawl-py>=4.14.0",
+    "httpx>=0.28.1",
+    "langchain>=1.2.7",
+    "langchain-openai>=1.1.7",
+    "langgraph>=1.0.7",
+    "langsmith>=0.6.7",
+    "lightrag-hku>=1.4.9.11",
+    "llama-parse>=0.6.91",
+    "neo4j>=6.1.0",
+    "pgvector>=0.4.2",
+    "prisma>=0.15.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "python-dotenv>=1.2.1",
+    "python-multipart>=0.0.22",
+    "tavily-python>=0.7.21",
+    "uvicorn>=0.40.0",
+    "youtube-transcript-api>=1.2.4",
+]

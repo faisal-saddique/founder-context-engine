@@ -1,0 +1,90 @@
+// Prisma Schema for Founder Context Engine
+// Database: PostgreSQL (Supabase)
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-py"
+  interface = "asyncio"
+}
+
+// Platform-specific configurations
+model PlatformConfig {
+  id                  String   @id @default(uuid())
+  platformName        String   @unique @map("platform_name")
+  customInstructions  String?  @map("custom_instructions")
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("platform_configs")
+}
+
+// Agent rules for content generation
+model AgentRule {
+  id               String       @id @default(uuid())
+  platform         String
+  scope            RuleScope    @default(PLATFORM)
+  constraintText   String       @map("constraint_text")
+  ruleType         String?      @map("rule_type")
+  priority         Int          @default(10)
+  status           RuleStatus   @default(PROPOSED)
+  originFeedbackId String?      @map("origin_feedback_id")
+  createdAt        DateTime     @default(now()) @map("created_at")
+
+  // Relations
+  originFeedback   FeedbackLog? @relation(fields: [originFeedbackId], references: [id])
+
+  @@map("agent_rules")
+}
+
+// Generations audit log
+model Generation {
+  id                String   @id @default(uuid())
+  userId            String?  @map("user_id")
+  generationReason  String?  @map("generation_reason")
+  promptVersion     String?  @map("prompt_version")
+  finalOutput       String   @map("final_output")
+  sourceIdsUsed     Json?    @map("source_ids_used")
+  ruleIdsApplied    Json?    @map("rule_ids_applied")
+  modelConfig       Json?    @map("model_config")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  // Relations
+  feedbackLogs      FeedbackLog[]
+
+  @@map("generations")
+}
+
+// User feedback on generations
+model FeedbackLog {
+  id            String     @id @default(uuid())
+  generationId  String     @map("generation_id")
+  rating        Int?
+  category      String?
+  comment       String?
+
+  // Relations
+  generation    Generation @relation(fields: [generationId], references: [id], onDelete: Cascade)
+  proposedRules AgentRule[]
+
+  @@map("feedback_logs")
+}
+
+// Enums
+enum RuleScope {
+  GLOBAL
+  PLATFORM
+
+  @@map("rule_scope")
+}
+
+enum RuleStatus {
+  PROPOSED
+  ACTIVE
+  ARCHIVED
+
+  @@map("rule_status")
+}

@@ -1,0 +1,20 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.env
+
+docs/
+Dataset/
+CLAUDE.md
+.DS_Store
+
+*.pdf
+*.zip
