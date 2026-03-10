@@ -181,6 +181,10 @@ The `/generate` endpoint runs a 5-node LangGraph workflow. Nodes 3 and 4 can loo
 ## Project Structure
 
 ```
+admin/
+├── start.py                     # Admin server launcher (reads .env, wires LightRAG Server)
+├── start.sh                     # Convenience bash wrapper for start.py
+└── rag_storage/                 # Local working dir for LightRAG Server (gitignored)
 src/
 ├── api/
 │   ├── main.py                  # FastAPI app, lifespan, CORS
@@ -204,6 +208,26 @@ src/
     ├── validation/              # Claim detection + source checking
     └── llm/                     # OpenAI wrapper for generation + critique
 ```
+
+## Admin Panel (Knowledge Base Inspector)
+
+A local admin server built on [LightRAG Server](https://github.com/HKUDS/LightRAG/blob/main/lightrag/api/README.md) that connects to the same Neo4j and Supabase instance as the production app. Useful for visually auditing the knowledge graph, checking ingested documents, and testing queries — without writing any code.
+
+```bash
+./admin/start.sh
+# or
+uv run python admin/start.py
+```
+
+Opens at **http://127.0.0.1:9621** (localhost only, not exposed to the network).
+
+| Tab | What you get |
+|-----|-------------|
+| **Documents** | Every ingested document with its ID, chunk count, and status |
+| **Knowledge Graph** | Interactive graph — click any entity to see its properties and relationships |
+| **Retrieval** | Chat-style query sandbox with mode selector (local / global / hybrid) |
+
+The admin server is read-only from a data-integrity standpoint — it shares no state with the running production API. Credentials are read from the project `.env` automatically.
 
 ## Scripts
 

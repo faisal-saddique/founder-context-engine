@@ -18,3 +18,6 @@ CLAUDE.md
 
 *.pdf
 *.zip
+
+# LightRAG admin server working dir (local cache only, data lives in Neo4j + PG)
+admin/rag_storage/
